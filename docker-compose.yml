@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:15
+    container_name: store-db
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-123456}
+      POSTGRES_DB: ${POSTGRES_DB:-store-db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+
+#  backend:
+#    build: .
+#    container_name: spring-boot-app
+#    restart: always
+#    depends_on:
+#      - db
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/store-db
+#      SPRING_DATASOURCE_USERNAME: postgres
+#      SPRING_DATASOURCE_PASSWORD: 123456
+#      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+#    ports:
+#      - "8080:8080"
