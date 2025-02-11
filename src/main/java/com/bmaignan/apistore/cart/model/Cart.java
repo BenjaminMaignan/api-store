@@ -1,5 +1,6 @@
 package com.bmaignan.apistore.cart.model;
 
+import com.bmaignan.apistore.cartitem.model.CartItem;
 import com.bmaignan.apistore.customer.model.Customer;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,7 +22,7 @@ public class Cart {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @OneToMany
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> cartItems;
 
 }

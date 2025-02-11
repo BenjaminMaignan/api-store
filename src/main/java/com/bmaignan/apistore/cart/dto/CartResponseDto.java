@@ -1,5 +1,6 @@
 package com.bmaignan.apistore.cart.dto;
 
+import com.bmaignan.apistore.cartitem.dto.CartItemResponseDto;
 import lombok.Builder;
 
 import java.util.List;

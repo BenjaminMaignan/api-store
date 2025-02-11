@@ -1,6 +1,7 @@
-package com.bmaignan.apistore.cart.model;
+package com.bmaignan.apistore.cartitem.model;
 
 import com.bmaignan.apistore.article.model.Article;
+import com.bmaignan.apistore.cart.model.Cart;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,9 +18,11 @@ public class CartItem {
     private UUID id;
 
     @ManyToOne
+    @JoinColumn(name = "cart_id")
     private Cart cart;
 
-    @ManyToOne
+    @OneToOne
+    @JoinColumn(name = "article_id")
     private Article article;
 
     private Integer quantity;
