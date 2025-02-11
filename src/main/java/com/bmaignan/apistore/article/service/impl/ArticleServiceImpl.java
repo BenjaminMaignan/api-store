@@ -53,7 +53,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Transactional
     public ArticleResponseDTO updateArticle(UUID id, ArticleRequestDTO articleDTO) {
         if (!articleDTO.id().equals(id)) {
-            throw notFound("Article not found");
+            throw notFound("Article not found"); // FIXME: change the error
         }
 
         return ArticleMapper.toResponseDTO(

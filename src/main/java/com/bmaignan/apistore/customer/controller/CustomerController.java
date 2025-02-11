@@ -5,6 +5,7 @@ import com.bmaignan.apistore.customer.dto.CustomerResponseDto;
 import com.bmaignan.apistore.customer.service.CustomerService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -16,9 +17,9 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @GetMapping("/login")
-    public CustomerResponseDto login(@RequestParam String email) {
-        return customerService.login(email);
+    @GetMapping
+    public List<CustomerResponseDto> findAllCustomers() {
+        return customerService.findAllCustomers();
     }
 
     @GetMapping("/{id}")
@@ -29,5 +30,15 @@ public class CustomerController {
     @PostMapping
     public CustomerResponseDto createCustomer(@RequestBody CustomerRequestDto customer) {
         return customerService.createCustomer(customer);
+    }
+
+    @PutMapping("/{id}")
+    public CustomerResponseDto updateCustomer(@PathVariable UUID id, @RequestBody CustomerRequestDto customer) {
+        return customerService.updateCustomer(id, customer);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteCustomer(@PathVariable UUID id) {
+        customerService.deleteCustomer(id);
     }
 }

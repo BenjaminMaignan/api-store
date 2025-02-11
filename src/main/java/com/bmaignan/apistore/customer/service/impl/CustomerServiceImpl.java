@@ -7,6 +7,7 @@ import com.bmaignan.apistore.customer.repository.CustomerDao;
 import com.bmaignan.apistore.customer.service.CustomerService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 import static com.bmaignan.apistore.core.exception.ExceptionFactory.notFound;
@@ -20,11 +21,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerResponseDto login(String email) {
-        return customerDao.findByEmail(email)
+    public List<CustomerResponseDto> findAllCustomers() {
+        return customerDao.findAll().stream()
                 .map(CustomerMapper::toResponseDto)
-                .orElseThrow(() -> notFound("Customer not found"));
+                .toList();
     }
+
 
     @Override
     public CustomerResponseDto getCustomer(UUID id) {
@@ -34,7 +36,21 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerResponseDto createCustomer(CustomerRequestDto customer) {
-        return CustomerMapper.toResponseDto(customerDao.save(CustomerMapper.toEntity(customer)));
+    public CustomerResponseDto createCustomer(CustomerRequestDto customerDTO) {
+        return CustomerMapper.toResponseDto(customerDao.save(CustomerMapper.toEntity(customerDTO)));
+    }
+
+    @Override
+    public CustomerResponseDto updateCustomer(UUID id, CustomerRequestDto customerDTO) {
+        if (!customerDTO.id().equals(id)) {
+            throw notFound("Customer not found"); // FIXME : change the error
+        }
+
+        return CustomerMapper.toResponseDto(customerDao.save(CustomerMapper.toEntity(customerDTO)));
+    }
+
+    @Override
+    public void deleteCustomer(UUID id) {
+        customerDao.deleteById(id);
     }
 }
