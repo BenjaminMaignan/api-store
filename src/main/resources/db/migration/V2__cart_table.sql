@@ -2,6 +2,7 @@ CREATE TABLE cart
 (
     id          UUID PRIMARY KEY,
     customer_id UUID NOT NULL,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (customer_id) REFERENCES customer (id)
 );
 
