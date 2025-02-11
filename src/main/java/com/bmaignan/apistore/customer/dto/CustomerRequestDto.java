@@ -1,16 +1,14 @@
 package com.bmaignan.apistore.customer.dto;
 
-import com.bmaignan.apistore.cart.dto.CartResponseDto;
-import lombok.Builder;
+import com.bmaignan.apistore.cart.dto.CartRequestDto;
 
 import java.util.UUID;
 
-@Builder
-public record CustomerResponseDto(
+
+public record CustomerRequestDto(
         UUID id,
         String firstName,
         String lastName,
         String email,
-        CartResponseDto cart
-) {
+        CartRequestDto cart) {
 }

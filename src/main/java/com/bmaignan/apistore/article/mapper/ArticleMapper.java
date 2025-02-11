@@ -10,19 +10,19 @@ public class ArticleMapper {
     private ArticleMapper() {
     }
 
-    public static Article toEntity(ArticleResponseDTO articleDTO) {
-        return new Article(articleDTO.id(), articleDTO.name(), articleDTO.price());
-    }
-
     public static Article toEntity(ArticleRequestDTO articleDTO) {
-        return new Article(articleDTO.id(), articleDTO.name(), articleDTO.price());
-    }
-
-    public static ArticleRequestDTO toRequestDTO(Article article) {
-        return new ArticleRequestDTO(article.getId(), article.getName(), article.getPrice());
+        return new Article(
+                articleDTO.id(),
+                articleDTO.name(),
+                articleDTO.price(),
+                articleDTO.availableStock());
     }
 
     public static ArticleResponseDTO toResponseDTO(Article article) {
-        return new ArticleResponseDTO(article.getId(), article.getName(), article.getPrice());
+        return new ArticleResponseDTO(
+                article.getId(),
+                article.getName(),
+                article.getPrice(),
+                article.getAvailableStock());
     }
 }

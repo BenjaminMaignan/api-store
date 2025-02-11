@@ -4,7 +4,6 @@ import com.bmaignan.apistore.cart.model.Cart;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -23,6 +22,6 @@ public class Customer {
 
     private String email;
 
-    @OneToMany(mappedBy = "customer")
-    private List<Cart> cart;
+    @OneToOne(mappedBy = "customer")
+    private Cart cart;
 }

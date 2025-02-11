@@ -22,4 +22,6 @@ public class Article {
 
     private Float price;
 
+    private Integer availableStock;
+
 }

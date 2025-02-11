@@ -8,6 +8,7 @@ import java.util.UUID;
 public record ArticleResponseDTO(
     UUID id,
     String name,
-    Float price
+    Float price,
+    Integer availableStock
 ) {
 }

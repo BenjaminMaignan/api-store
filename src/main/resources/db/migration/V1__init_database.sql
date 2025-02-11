@@ -10,5 +10,6 @@ CREATE TABLE customer (
 CREATE TABLE article (
     id UUID PRIMARY KEY,
     name VARCHAR NOT NULL,
-    price DECIMAL(10, 2) NOT NULL
+    price DECIMAL(10, 2) NOT NULL,
+    available_stock INTEGER NOT NULL DEFAULT 0
 );
