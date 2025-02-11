@@ -3,26 +3,14 @@ package com.bmaignan.apistore.customer.mapper;
 import com.bmaignan.apistore.customer.dto.CustomerRequestDto;
 import com.bmaignan.apistore.customer.dto.CustomerResponseDto;
 import com.bmaignan.apistore.customer.model.Customer;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-public class CustomerMapper {
-    private CustomerMapper() {
-    }
+@Mapper(componentModel = "spring")
+public interface CustomerMapper {
 
-    public static Customer toEntity(CustomerRequestDto customerDTO) {
-        return new Customer(
-                customerDTO.id(),
-                customerDTO.firstName(),
-                customerDTO.lastName(),
-                customerDTO.email(),
-                null);
-    }
+    Customer toEntity(CustomerRequestDto customerDTO);
 
-    public static CustomerResponseDto toResponseDto(Customer customer) {
-        return new CustomerResponseDto(
-                customer.getId(),
-                customer.getFirstname(),
-                customer.getLastname(),
-                customer.getEmail(),
-                null);
-    }
+    @Mapping(target = "cart", source = "cart")
+    CustomerResponseDto toResponseDto(Customer customer);
 }

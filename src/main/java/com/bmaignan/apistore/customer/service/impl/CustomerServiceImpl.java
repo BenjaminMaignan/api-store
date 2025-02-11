@@ -15,15 +15,17 @@ import static com.bmaignan.apistore.core.exception.ExceptionFactory.notFound;
 @Service
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerDao customerDao;
+    private final CustomerMapper customerMapper;
 
-    public CustomerServiceImpl(CustomerDao customerDao) {
+    public CustomerServiceImpl(CustomerDao customerDao, CustomerMapper customerMapper) {
         this.customerDao = customerDao;
+        this.customerMapper = customerMapper;
     }
 
     @Override
     public List<CustomerResponseDto> findAllCustomers() {
         return customerDao.findAll().stream()
-                .map(CustomerMapper::toResponseDto)
+                .map(customerMapper::toResponseDto)
                 .toList();
     }
 
@@ -31,13 +33,13 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerResponseDto getCustomer(UUID id) {
         return customerDao.findById(id)
-                .map(CustomerMapper::toResponseDto)
+                .map(customerMapper::toResponseDto)
                 .orElseThrow(() -> notFound("Customer not found"));
     }
 
     @Override
     public CustomerResponseDto createCustomer(CustomerRequestDto customerDTO) {
-        return CustomerMapper.toResponseDto(customerDao.save(CustomerMapper.toEntity(customerDTO)));
+        return customerMapper.toResponseDto(customerDao.save(customerMapper.toEntity(customerDTO)));
     }
 
     @Override
@@ -46,7 +48,7 @@ public class CustomerServiceImpl implements CustomerService {
             throw notFound("Customer not found"); // FIXME : change the error
         }
 
-        return CustomerMapper.toResponseDto(customerDao.save(CustomerMapper.toEntity(customerDTO)));
+        return customerMapper.toResponseDto(customerDao.save(customerMapper.toEntity(customerDTO)));
     }
 
     @Override

@@ -7,8 +7,8 @@ import java.util.UUID;
 
 public record CustomerRequestDto(
         UUID id,
-        String firstName,
-        String lastName,
+        String firstname,
+        String lastname,
         String email,
         CartRequestDto cart) {
 }

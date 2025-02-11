@@ -8,8 +8,8 @@ import java.util.UUID;
 @Builder
 public record CustomerResponseDto(
         UUID id,
-        String firstName,
-        String lastName,
+        String firstname,
+        String lastname,
         String email,
         CartResponseDto cart
 ) {

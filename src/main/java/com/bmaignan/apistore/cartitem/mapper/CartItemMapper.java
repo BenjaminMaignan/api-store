@@ -1,38 +1,19 @@
 package com.bmaignan.apistore.cartitem.mapper;
 
-import com.bmaignan.apistore.article.mapper.ArticleMapper;
-import com.bmaignan.apistore.article.model.Article;
-import com.bmaignan.apistore.cart.model.Cart;
+import com.bmaignan.apistore.article.service.ArticleService;
+import com.bmaignan.apistore.cart.service.CartService;
 import com.bmaignan.apistore.cartitem.dto.CartItemRequestDto;
 import com.bmaignan.apistore.cartitem.dto.CartItemResponseDto;
 import com.bmaignan.apistore.cartitem.model.CartItem;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-public class CartItemMapper {
-    private CartItemMapper() {
-    }
+@Mapper(componentModel = "spring", uses = {ArticleService.class, CartService.class})
+public interface CartItemMapper {
 
-    public static CartItem toEntity(CartItemRequestDto cartItemDTO) {
-        var cart = Cart.builder()
-                .id(cartItemDTO.cartId())
-                .build();
+    @Mapping(target = "article", source = "articleId")
+    @Mapping(target = "cart", source = "cartId")
+    CartItem toEntity(CartItemRequestDto cartItemDTO);
 
-        var article = Article.builder()
-                .id(cartItemDTO.articleId())
-                .build();
-
-        return new CartItem(
-                cartItemDTO.id(),
-                cart,
-                article,
-                cartItemDTO.quantity());
-    }
-
-    public static CartItemResponseDto toResponseDto(CartItem cartItem) {
-        var articleDTO = ArticleMapper.toResponseDTO(cartItem.getArticle());
-
-        return new CartItemResponseDto(
-                cartItem.getId(),
-                articleDTO,
-                cartItem.getQuantity());
-    }
+    CartItemResponseDto toResponseDto(CartItem cartItem);
 }

@@ -2,7 +2,10 @@ package com.bmaignan.apistore.customer.model;
 
 import com.bmaignan.apistore.cart.model.Cart;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
@@ -13,7 +16,7 @@ import java.util.UUID;
 @Builder
 public class Customer {
     @Id
-    @GeneratedValue(strategy= GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     private String firstname;

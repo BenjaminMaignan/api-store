@@ -3,10 +3,9 @@ package com.bmaignan.apistore.cart.service.impl;
 import com.bmaignan.apistore.cart.dto.CartRequestDto;
 import com.bmaignan.apistore.cart.dto.CartResponseDto;
 import com.bmaignan.apistore.cart.mapper.CartMapper;
+import com.bmaignan.apistore.cart.model.Cart;
 import com.bmaignan.apistore.cart.repository.CartDao;
 import com.bmaignan.apistore.cart.service.CartService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,33 +17,39 @@ import static com.bmaignan.apistore.core.exception.ExceptionFactory.notFound;
 @Service
 @Transactional(readOnly = true)
 public class CartServiceImpl implements CartService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CartServiceImpl.class);
-
     private final CartDao cartDao;
+    private final CartMapper cartMapper;
 
-    public CartServiceImpl(CartDao cartDao) {
+    public CartServiceImpl(CartDao cartDao, CartMapper cartMapper) {
         this.cartDao = cartDao;
+        this.cartMapper = cartMapper;
     }
 
     @Override
     public List<CartResponseDto> findAllCarts() {
         return cartDao.findAll().stream()
-                .map(CartMapper::toResponseDto)
+                .map(cartMapper::toResponseDto)
                 .toList();
+    }
+
+    @Override
+    public Cart getEntity(UUID id) {
+        return cartDao.findById(id)
+                .orElseThrow(() -> notFound("Cart not found"));
     }
 
     @Override
     public CartResponseDto getCart(UUID id) {
         return cartDao.findById(id)
-                .map(CartMapper::toResponseDto)
+                .map(cartMapper::toResponseDto)
                 .orElseThrow(() -> notFound("Cart not found"));
     }
 
     @Override
     @Transactional
     public CartResponseDto createCart(CartRequestDto cartDTO) {
-        return CartMapper.toResponseDto(
-                cartDao.save(CartMapper.toEntity(cartDTO))
+        return cartMapper.toResponseDto(
+                cartDao.save(cartMapper.toEntity(cartDTO))
         );
     }
 
@@ -55,8 +60,8 @@ public class CartServiceImpl implements CartService {
             throw notFound("Cart not found"); // FIXME: change the error
         }
 
-        return CartMapper.toResponseDto(
-                cartDao.save(CartMapper.toEntity(cartDTO))
+        return cartMapper.toResponseDto(
+                cartDao.save(cartMapper.toEntity(cartDTO))
         );
     }
 

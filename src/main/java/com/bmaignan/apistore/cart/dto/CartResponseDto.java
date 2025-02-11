@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Builder
 public record CartResponseDto(
-    UUID id,
-    List<CartItemResponseDto> cartItems
+        UUID id,
+        List<CartItemResponseDto> cartItems
 ) {
 }

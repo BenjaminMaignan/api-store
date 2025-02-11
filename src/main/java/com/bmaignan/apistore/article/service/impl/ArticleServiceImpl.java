@@ -3,14 +3,14 @@ package com.bmaignan.apistore.article.service.impl;
 import com.bmaignan.apistore.article.dto.ArticleRequestDTO;
 import com.bmaignan.apistore.article.dto.ArticleResponseDTO;
 import com.bmaignan.apistore.article.mapper.ArticleMapper;
+import com.bmaignan.apistore.article.model.Article;
 import com.bmaignan.apistore.article.repository.ArticleDao;
 import com.bmaignan.apistore.article.service.ArticleService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.bmaignan.apistore.core.exception.ExceptionFactory.notFound;
@@ -18,34 +18,40 @@ import static com.bmaignan.apistore.core.exception.ExceptionFactory.notFound;
 @Service
 @Transactional(readOnly = true)
 public class ArticleServiceImpl implements ArticleService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ArticleServiceImpl.class);
-
     private final ArticleDao articleDao;
+    private final ArticleMapper articleMapper;
 
-    public ArticleServiceImpl(ArticleDao articleDao) {
+    public ArticleServiceImpl(ArticleDao articleDao, ArticleMapper articleMapper) {
         this.articleDao = articleDao;
+        this.articleMapper = articleMapper;
     }
 
     @Override
     public List<ArticleResponseDTO> findAllArticles() {
         return articleDao.findAll().stream()
-                .map(ArticleMapper::toResponseDTO)
+                .map(articleMapper::toResponseDTO)
                 .toList();
+    }
+
+    @Override
+    public Article getEntity(UUID id) {
+        return articleDao.findById(id)
+                .orElseThrow(() -> notFound("Article not found"));
     }
 
     @Override
     public ArticleResponseDTO getArticle(UUID id) {
         return
-            articleDao.findById(id)
-                .map(ArticleMapper::toResponseDTO)
-                .orElseThrow(() -> notFound("Article not found"));
+                articleDao.findById(id)
+                        .map(articleMapper::toResponseDTO)
+                        .orElseThrow(() -> notFound("Article not found"));
     }
 
     @Override
     @Transactional
     public ArticleResponseDTO createArticle(ArticleRequestDTO articleDTO) {
-        return ArticleMapper.toResponseDTO(
-                articleDao.save(ArticleMapper.toEntity(articleDTO))
+        return articleMapper.toResponseDTO(
+                articleDao.save(articleMapper.toEntity(articleDTO))
         );
     }
 
@@ -56,8 +62,8 @@ public class ArticleServiceImpl implements ArticleService {
             throw notFound("Article not found"); // FIXME: change the error
         }
 
-        return ArticleMapper.toResponseDTO(
-                articleDao.save(ArticleMapper.toEntity(articleDTO))
+        return articleMapper.toResponseDTO(
+                articleDao.save(articleMapper.toEntity(articleDTO))
         );
     }
 

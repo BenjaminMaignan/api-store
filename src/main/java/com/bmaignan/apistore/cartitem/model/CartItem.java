@@ -3,7 +3,10 @@ package com.bmaignan.apistore.cartitem.model;
 import com.bmaignan.apistore.article.model.Article;
 import com.bmaignan.apistore.cart.model.Cart;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
