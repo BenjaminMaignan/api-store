@@ -5,12 +5,12 @@ import com.bmaignan.apistore.cartitem.dto.CartItemResponseDto;
 import com.bmaignan.apistore.cartitem.mapper.CartItemMapper;
 import com.bmaignan.apistore.cartitem.repository.CartItemDao;
 import com.bmaignan.apistore.cartitem.service.CartItemService;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+import static com.bmaignan.apistore.core.exception.ExceptionFactory.alreadyExists;
 import static com.bmaignan.apistore.core.exception.ExceptionFactory.notFound;
 
 @Service
@@ -35,6 +35,10 @@ public class CartItemServiceImpl implements CartItemService {
     @Override
     @Transactional
     public CartItemResponseDto createCartItem(CartItemRequestDto cartItemDTO) {
+        if (cartItemDao.findByCartIdAndArticleId(cartItemDTO.cartId(), cartItemDTO.articleId()).isPresent()) {
+            throw alreadyExists("Cart item already exists");
+        }
+
         return cartItemMapper.toResponseDto(
                 cartItemDao.save(cartItemMapper.toEntity(cartItemDTO))
         );

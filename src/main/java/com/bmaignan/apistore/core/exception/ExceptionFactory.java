@@ -16,4 +16,12 @@ public final class ExceptionFactory {
     public static ErrorResponseException notFound(String detail) {
         return buildException(HttpStatus.NOT_FOUND, detail, null);
     }
+
+    public static ErrorResponseException alreadyExists(String detail) {
+        return buildException(HttpStatus.CONFLICT, detail, null);
+    }
+
+    public static ErrorResponseException conflict(String detail) {
+        return buildException(HttpStatus.CONFLICT, detail, null);
+    }
 }

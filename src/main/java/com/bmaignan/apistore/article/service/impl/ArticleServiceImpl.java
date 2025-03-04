@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
+import static com.bmaignan.apistore.core.exception.ExceptionFactory.conflict;
 import static com.bmaignan.apistore.core.exception.ExceptionFactory.notFound;
 
 @Service
@@ -59,7 +59,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Transactional
     public ArticleResponseDTO updateArticle(UUID id, ArticleRequestDTO articleDTO) {
         if (!articleDTO.id().equals(id)) {
-            throw notFound("Article not found"); // FIXME: change the error
+            throw conflict("Article");
         }
 
         return articleMapper.toResponseDTO(

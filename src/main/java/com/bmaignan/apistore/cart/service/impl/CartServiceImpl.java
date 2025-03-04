@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
+import static com.bmaignan.apistore.core.exception.ExceptionFactory.conflict;
 import static com.bmaignan.apistore.core.exception.ExceptionFactory.notFound;
 
 @Service
@@ -57,7 +58,7 @@ public class CartServiceImpl implements CartService {
     @Transactional
     public CartResponseDto updateCart(UUID id, CartRequestDto cartDTO) {
         if (!cartDTO.id().equals(id)) {
-            throw notFound("Cart not found"); // FIXME: change the error
+            throw conflict("Cart");
         }
 
         return cartMapper.toResponseDto(
