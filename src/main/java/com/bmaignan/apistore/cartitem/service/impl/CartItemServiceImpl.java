@@ -1,5 +1,6 @@
 package com.bmaignan.apistore.cartitem.service.impl;
 
+import com.bmaignan.apistore.cart.repository.CartDao;
 import com.bmaignan.apistore.cartitem.dto.CartItemRequestDto;
 import com.bmaignan.apistore.cartitem.dto.CartItemResponseDto;
 import com.bmaignan.apistore.cartitem.mapper.CartItemMapper;
@@ -18,10 +19,12 @@ import static com.bmaignan.apistore.core.exception.ExceptionFactory.notFound;
 public class CartItemServiceImpl implements CartItemService {
     private final CartItemDao cartItemDao;
     private final CartItemMapper cartItemMapper;
+    private final CartDao cartDao;
 
-    public CartItemServiceImpl(CartItemDao cartItemDao, CartItemMapper cartItemMapper) {
+    public CartItemServiceImpl(CartItemDao cartItemDao, CartItemMapper cartItemMapper, CartDao cartDao) {
         this.cartItemDao = cartItemDao;
         this.cartItemMapper = cartItemMapper;
+        this.cartDao = cartDao;
     }
 
     @Override
@@ -58,7 +61,15 @@ public class CartItemServiceImpl implements CartItemService {
     @Override
     @Transactional
     public void deleteCartItem(UUID id) {
-        cartItemDao.deleteById(id);
+        var cartItem = cartItemDao.findById(id).orElse(null);
+        if (cartItem != null) {
+            var cart = cartItem.getCart();
+            if (cart != null) {
+                cart.getCartItems().remove(cartItem);
+                cartDao.save(cart);
+            }
+            cartItemDao.deleteById(id);
+        }
     }
 
 }

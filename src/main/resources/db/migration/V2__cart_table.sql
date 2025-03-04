@@ -9,9 +9,9 @@ CREATE TABLE cart
 CREATE TABLE cart_item
 (
     id         UUID PRIMARY KEY,
-    cart_id    UUID NOT NULL,
-    article_id UUID NOT NULL,
-    quantity   INT  NOT NULL,
+    cart_id    UUID,
+    article_id UUID,
+    quantity   INT  DEFAULT 0,
     FOREIGN KEY (cart_id) REFERENCES cart (id),
     FOREIGN KEY (article_id) REFERENCES article (id)
 );
