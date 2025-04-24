@@ -51,8 +51,16 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     @Transactional
     public ArticleResponseDTO createArticle(ArticleRequestDTO articleDTO) {
+        var article = articleMapper.toEntity(articleDTO);
+
+        if (article.getArticleItems() != null) {
+            article.getArticleItems().forEach(articleItem -> {
+                articleItem.setArticle(article);
+            });
+        }
+
         return articleMapper.toResponseDTO(
-                articleDao.save(articleMapper.toEntity(articleDTO))
+                articleDao.save(article)
         );
     }
 
