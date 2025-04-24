@@ -1,7 +1,7 @@
 package com.bmaignan.apistore.article.controller;
 
+import com.bmaignan.apistore.article.dto.ArticleLightResponseDTO;
 import com.bmaignan.apistore.article.dto.ArticleRequestDTO;
-import com.bmaignan.apistore.article.dto.ArticleResponseLightDTO;
 import com.bmaignan.apistore.article.service.ArticleService;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,22 +18,22 @@ public class ArticleController {
     }
 
     @GetMapping
-    public List<ArticleResponseLightDTO> getArticles() {
+    public List<ArticleLightResponseDTO> getArticles() {
         return articleService.findAllArticles();
     }
 
     @GetMapping("/{id}")
-    public ArticleResponseLightDTO getArticle(@PathVariable UUID id) {
+    public ArticleLightResponseDTO getArticle(@PathVariable UUID id) {
         return articleService.getArticle(id);
     }
 
     @PostMapping
-    public ArticleResponseLightDTO createArticle(@RequestBody ArticleRequestDTO article) {
+    public ArticleLightResponseDTO createArticle(@RequestBody ArticleRequestDTO article) {
         return articleService.createArticle(article);
     }
 
     @PutMapping("/{id}")
-    public ArticleResponseLightDTO updateArticle(@PathVariable UUID id, @RequestBody ArticleRequestDTO article) {
+    public ArticleLightResponseDTO updateArticle(@PathVariable UUID id, @RequestBody ArticleRequestDTO article) {
         return articleService.updateArticle(id, article);
     }
 

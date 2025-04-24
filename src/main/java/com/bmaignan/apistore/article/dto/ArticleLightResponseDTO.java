@@ -5,7 +5,7 @@ import lombok.Builder;
 import java.util.UUID;
 
 @Builder
-public record ArticleResponseLightDTO(
+public record ArticleLightResponseDTO(
         UUID id,
         String name,
         Float price
