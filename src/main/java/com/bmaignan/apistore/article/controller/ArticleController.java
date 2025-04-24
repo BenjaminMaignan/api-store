@@ -2,6 +2,7 @@ package com.bmaignan.apistore.article.controller;
 
 import com.bmaignan.apistore.article.dto.ArticleLightResponseDTO;
 import com.bmaignan.apistore.article.dto.ArticleRequestDTO;
+import com.bmaignan.apistore.article.dto.ArticleResponseDTO;
 import com.bmaignan.apistore.article.service.ArticleService;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,17 +24,17 @@ public class ArticleController {
     }
 
     @GetMapping("/{id}")
-    public ArticleLightResponseDTO getArticle(@PathVariable UUID id) {
+    public ArticleResponseDTO getArticle(@PathVariable UUID id) {
         return articleService.getArticle(id);
     }
 
     @PostMapping
-    public ArticleLightResponseDTO createArticle(@RequestBody ArticleRequestDTO article) {
+    public ArticleResponseDTO createArticle(@RequestBody ArticleRequestDTO article) {
         return articleService.createArticle(article);
     }
 
     @PutMapping("/{id}")
-    public ArticleLightResponseDTO updateArticle(@PathVariable UUID id, @RequestBody ArticleRequestDTO article) {
+    public ArticleResponseDTO updateArticle(@PathVariable UUID id, @RequestBody ArticleRequestDTO article) {
         return articleService.updateArticle(id, article);
     }
 

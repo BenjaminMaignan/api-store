@@ -2,6 +2,7 @@ package com.bmaignan.apistore.article.service.impl;
 
 import com.bmaignan.apistore.article.dto.ArticleLightResponseDTO;
 import com.bmaignan.apistore.article.dto.ArticleRequestDTO;
+import com.bmaignan.apistore.article.dto.ArticleResponseDTO;
 import com.bmaignan.apistore.article.mapper.ArticleMapper;
 import com.bmaignan.apistore.article.model.Article;
 import com.bmaignan.apistore.article.repository.ArticleDao;
@@ -29,7 +30,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public List<ArticleLightResponseDTO> findAllArticles() {
         return articleDao.findAll().stream()
-                .map(articleMapper::toResponseDTO)
+                .map(articleMapper::toLightResponseDTO)
                 .toList();
     }
 
@@ -40,7 +41,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public ArticleLightResponseDTO getArticle(UUID id) {
+    public ArticleResponseDTO getArticle(UUID id) {
         return
                 articleDao.findById(id)
                         .map(articleMapper::toResponseDTO)
@@ -49,7 +50,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public ArticleLightResponseDTO createArticle(ArticleRequestDTO articleDTO) {
+    public ArticleResponseDTO createArticle(ArticleRequestDTO articleDTO) {
         return articleMapper.toResponseDTO(
                 articleDao.save(articleMapper.toEntity(articleDTO))
         );
@@ -57,7 +58,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public ArticleLightResponseDTO updateArticle(UUID id, ArticleRequestDTO articleDTO) {
+    public ArticleResponseDTO updateArticle(UUID id, ArticleRequestDTO articleDTO) {
         if (!articleDTO.id().equals(id)) {
             throw conflict("Article");
         }
