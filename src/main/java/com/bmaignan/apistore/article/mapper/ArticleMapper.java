@@ -1,7 +1,7 @@
 package com.bmaignan.apistore.article.mapper;
 
 import com.bmaignan.apistore.article.dto.ArticleRequestDTO;
-import com.bmaignan.apistore.article.dto.ArticleResponseDTO;
+import com.bmaignan.apistore.article.dto.ArticleResponseLightDTO;
 import com.bmaignan.apistore.article.model.Article;
 import org.mapstruct.Mapper;
 
@@ -9,5 +9,5 @@ import org.mapstruct.Mapper;
 public interface ArticleMapper {
     Article toEntity(ArticleRequestDTO articleDTO);
 
-    ArticleResponseDTO toResponseDTO(Article article);
+    ArticleResponseLightDTO toResponseDTO(Article article);
 }

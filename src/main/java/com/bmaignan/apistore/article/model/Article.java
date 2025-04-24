@@ -1,14 +1,13 @@
 package com.bmaignan.apistore.article.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.bmaignan.apistore.articleitem.model.ArticleItem;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -25,5 +24,7 @@ public class Article {
 
     private Float price;
 
-    private Integer availableStock;
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<ArticleItem> articleItems;
+
 }

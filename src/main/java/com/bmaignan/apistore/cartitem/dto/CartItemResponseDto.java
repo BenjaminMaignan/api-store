@@ -1,6 +1,6 @@
 package com.bmaignan.apistore.cartitem.dto;
 
-import com.bmaignan.apistore.article.dto.ArticleResponseDTO;
+import com.bmaignan.apistore.article.dto.ArticleResponseLightDTO;
 import lombok.Builder;
 
 import java.util.UUID;
@@ -8,7 +8,7 @@ import java.util.UUID;
 @Builder
 public record CartItemResponseDto(
         UUID id,
-        ArticleResponseDTO article,
+        ArticleResponseLightDTO article,
         Integer quantity
 ) {
 }

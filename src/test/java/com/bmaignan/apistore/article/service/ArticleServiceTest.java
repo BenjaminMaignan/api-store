@@ -28,19 +28,6 @@ class ArticleServiceTest {
 
     @BeforeEach
     void setUp() {
-        article1 = new Article(
-                null,
-                "Article 1",
-                10.99f,
-                1
-        );
-
-        article2 = new Article(
-                null,
-                "Article 2",
-                20.99f,
-                2
-        );
     }
 
     @Test

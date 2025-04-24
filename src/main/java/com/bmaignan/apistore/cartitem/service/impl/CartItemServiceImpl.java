@@ -11,8 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-import static com.bmaignan.apistore.core.exception.ExceptionFactory.alreadyExists;
-import static com.bmaignan.apistore.core.exception.ExceptionFactory.notFound;
+import static com.bmaignan.apistore.core.exception.ExceptionFactory.*;
 
 @Service
 @Transactional(readOnly = true)

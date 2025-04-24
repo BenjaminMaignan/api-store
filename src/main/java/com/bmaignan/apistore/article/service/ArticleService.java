@@ -1,23 +1,23 @@
 package com.bmaignan.apistore.article.service;
 
 import com.bmaignan.apistore.article.dto.ArticleRequestDTO;
-import com.bmaignan.apistore.article.dto.ArticleResponseDTO;
+import com.bmaignan.apistore.article.dto.ArticleResponseLightDTO;
 import com.bmaignan.apistore.article.model.Article;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface ArticleService {
-    List<ArticleResponseDTO> findAllArticles();
+    List<ArticleResponseLightDTO> findAllArticles();
 
     /* Using by mapstruct */
     Article getEntity(UUID id);
 
-    ArticleResponseDTO getArticle(UUID id);
+    ArticleResponseLightDTO getArticle(UUID id);
 
-    ArticleResponseDTO createArticle(ArticleRequestDTO articleDTO);
+    ArticleResponseLightDTO createArticle(ArticleRequestDTO articleDTO);
 
-    ArticleResponseDTO updateArticle(UUID id, ArticleRequestDTO articleDTO);
+    ArticleResponseLightDTO updateArticle(UUID id, ArticleRequestDTO articleDTO);
 
     void deleteArticle(UUID id);
 }
