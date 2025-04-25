@@ -37,7 +37,7 @@ public class CartItemServiceImpl implements CartItemService {
     @Override
     @Transactional
     public CartItemResponseDto createCartItem(CartItemRequestDto cartItemDTO) {
-        if (cartItemDao.findByCartIdAndArticleId(cartItemDTO.cartId(), cartItemDTO.articleId()).isPresent()) {
+        if (cartItemDao.findByCartIdAndArticleItemId(cartItemDTO.cartId(), cartItemDTO.articleItemId()).isPresent()) {
             throw alreadyExists("Cart item already exists");
         }
 

@@ -31,7 +31,7 @@ public class ArticleItemServiceImpl implements ArticleItemService {
     }
 
     @Override
-    public ArticleItemResponseDTO getArticleItemById(UUID id) {
+    public ArticleItemResponseDTO getArticleItem(UUID id) {
         return articleItemDao
                 .findById(id)
                 .map(articleItemMapper::toResponseDTO)

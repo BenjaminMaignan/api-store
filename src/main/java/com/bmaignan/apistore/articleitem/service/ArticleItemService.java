@@ -10,9 +10,10 @@ import java.util.UUID;
 public interface ArticleItemService {
     List<ArticleItemResponseDTO> findAllArticleItems();
 
-    ArticleItemResponseDTO getArticleItemById(UUID id);
-
+    /* Use by mapstruct */
     ArticleItem getEntity(UUID id);
+
+    ArticleItemResponseDTO getArticleItem(UUID id);
 
     ArticleItemResponseDTO createArticleItem(ArticleItemRequestDTO articleItemRequestDTO);
 

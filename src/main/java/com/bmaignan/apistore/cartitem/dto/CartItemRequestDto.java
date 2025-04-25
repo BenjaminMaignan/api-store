@@ -5,7 +5,7 @@ import java.util.UUID;
 public record CartItemRequestDto(
         UUID id,
         UUID cartId,
-        UUID articleId,
+        UUID articleItemId,
         Integer quantity
 ) {
 }
