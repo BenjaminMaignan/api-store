@@ -9,6 +9,7 @@ import com.bmaignan.apistore.articleitem.service.ArticleItemService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -20,6 +21,13 @@ public class ArticleItemServiceImpl implements ArticleItemService {
     public ArticleItemServiceImpl(ArticleItemDao articleItemDao, ArticleItemMapper articleItemMapper) {
         this.articleItemDao = articleItemDao;
         this.articleItemMapper = articleItemMapper;
+    }
+
+    @Override
+    public List<ArticleItemResponseDTO> findAllArticleItems() {
+        return articleItemDao.findAll().stream()
+                .map(articleItemMapper::toResponseDTO)
+                .toList();
     }
 
     @Override

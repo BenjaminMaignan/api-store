@@ -54,9 +54,9 @@ public class ArticleServiceImpl implements ArticleService {
         var article = articleMapper.toEntity(articleDTO);
 
         if (article.getArticleItems() != null) {
-            article.getArticleItems().forEach(articleItem -> {
-                articleItem.setArticle(article);
-            });
+            article.getArticleItems().forEach(articleItem ->
+                    articleItem.setArticle(article)
+            );
         }
 
         return articleMapper.toResponseDTO(
