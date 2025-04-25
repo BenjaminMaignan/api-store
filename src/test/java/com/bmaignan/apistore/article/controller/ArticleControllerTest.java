@@ -1,91 +1,86 @@
 package com.bmaignan.apistore.article.controller;
 
-import com.bmaignan.apistore.article.dto.ArticleLightResponseDTO;
-import com.bmaignan.apistore.article.dto.ArticleRequestDTO;
-import com.bmaignan.apistore.article.dto.ArticleResponseDTO;
-import com.bmaignan.apistore.article.service.ArticleService;
-import com.bmaignan.apistore.articleitem.dto.ArticleItemRequestDTO;
-import com.bmaignan.apistore.articleitem.dto.ArticleItemResponseDTO;
+import com.bmaignan.apistore.article.model.Article;
+import com.bmaignan.apistore.article.repository.ArticleDao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 
-import java.util.List;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import java.util.UUID;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.testcontainers.shaded.org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.hasSize;
 
-@WebMvcTest(ArticleController.class)
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
+@AutoConfigureTestDatabase(replace = Replace.ANY)
+@ActiveProfiles("test")
 class ArticleControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Mock
-    private ArticleService articleService;
+    @Autowired
+    private ArticleDao articleDao;
 
-    private UUID articleId;
-    private ArticleRequestDTO articleRequestDTO;
-    private ArticleResponseDTO articleResponseDTO;
-    private List<ArticleLightResponseDTO> articleList;
+    private UUID articleId1;
+    private UUID articleId2;
+    private UUID unknownId;
 
     @BeforeEach
     void setUp() {
-        articleId = UUID.randomUUID();
+        articleDao.deleteAll();
 
-        articleRequestDTO = new ArticleRequestDTO(
-                articleId,
-                "Test Article",
-                100.0F,
-                List.of(
-                        new ArticleItemRequestDTO(UUID.randomUUID(), articleId, "XL", "Red", 2),
-                        new ArticleItemRequestDTO(UUID.randomUUID(), articleId, "XL", "Blue", 2)
-                )
-        );
+        Article article1 = new Article();
+        article1.setName("Test Article");
+        article1.setPrice(100.0F);
+        article1 = articleDao.save(article1);
+        articleId1 = article1.getId();
 
-        articleResponseDTO = new ArticleResponseDTO(
-                articleId,
-                "Test Article",
-                100.0F,
-                List.of(
-                        new ArticleItemResponseDTO(UUID.randomUUID(), "XL", "Red", 2),
-                        new ArticleItemResponseDTO(UUID.randomUUID(), "XL", "Blue", 2)
-                )
-        );
+        Article article2 = new Article();
+        article2.setName("Another Article");
+        article2.setPrice(150.0F);
+        article2 = articleDao.save(article2);
+        articleId2 = article2.getId();
 
-        articleList = List.of(
-                new ArticleLightResponseDTO(articleId, "Test Article", 100.0F),
-                new ArticleLightResponseDTO(UUID.randomUUID(), "Another Article", 150.0F)
-        );
+        unknownId = UUID.randomUUID();
+
     }
 
     @Test
     void getAllArticles_shouldReturnListOfArticles() throws Exception {
-        // Given
-        when(articleService.findAllArticles()).thenReturn(articleList);
-
-        // When/Then
-        mockMvc.perform(get("/api/articles"))
+        mockMvc.perform(get("/api/articles")
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect((ResultMatcher) jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].id").value(articleId.toString()))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id").value(articleId1.toString()))
                 .andExpect(jsonPath("$[0].name").value("Test Article"))
-                .andExpect(jsonPath("$[0].price").value(100.0));
-
-        verify(articleService).findAllArticles();
+                .andExpect(jsonPath("$[0].price").value(100.0))
+                .andExpect(jsonPath("$[1].name").value("Another Article"))
+                .andExpect(jsonPath("$[1].price").value(150.0));
     }
 
+    @Test
+    void getArticleById_shouldReturnArticle() throws Exception {
+        mockMvc.perform(get("/api/articles/" + articleId1)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Test Article"))
+                .andExpect(jsonPath("$.price").value(100.0));
+    }
 
+    @Test
+    void getArticleByUnknownId_shouldReturnNotFound() throws Exception {
+        mockMvc.perform(get("/api/articles/" + unknownId)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
 }
