@@ -1,7 +1,9 @@
 package com.bmaignan.apistore.articleitem.dto;
 
+import java.util.UUID;
+
 public record ArticleItemResponseDTO(
-        String id,
+        UUID id,
         String size,
         String color,
         Integer availableStock
