@@ -15,7 +15,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import java.util.UUID;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.hamcrest.Matchers.hasSize;
@@ -32,7 +34,6 @@ class ArticleControllerTest {
     private ArticleDao articleDao;
 
     private UUID articleId1;
-    private UUID articleId2;
     private UUID unknownId;
 
     @BeforeEach
@@ -48,8 +49,7 @@ class ArticleControllerTest {
         Article article2 = new Article();
         article2.setName("Another Article");
         article2.setPrice(150.0F);
-        article2 = articleDao.save(article2);
-        articleId2 = article2.getId();
+        articleDao.save(article2);
 
         unknownId = UUID.randomUUID();
 
@@ -80,6 +80,77 @@ class ArticleControllerTest {
     @Test
     void getArticleByUnknownId_shouldReturnNotFound() throws Exception {
         mockMvc.perform(get("/api/articles/" + unknownId)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void createArticle_shouldReturnCreatedArticle() throws Exception {
+        String newArticleJson = """
+                {
+                    "name": "New Article",
+                    "price": 200.0,
+                    "articleItems": []
+                }
+                """;
+
+        mockMvc.perform(post("/api/articles")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(newArticleJson))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("New Article"))
+                .andExpect(jsonPath("$.price").value(200.0));
+
+        assertThat(articleDao.findAll()).hasSize(3);
+    }
+
+    @Test
+    void updateArticle_shouldReturnUpdatedArticle() throws Exception {
+        String updatedArticleJson = """
+                {
+                    "id": "%s",
+                    "name": "Updated Article",
+                    "price": 250.0,
+                    "articleItems": []
+                }
+                """.formatted(articleId1);
+
+        mockMvc.perform(put("/api/articles/" + articleId1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updatedArticleJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Updated Article"))
+                .andExpect(jsonPath("$.price").value(250.0));
+    }
+
+    @Test
+    void updateArticleWithWrongData_shouldReturnConflict() throws Exception {
+        String updatedArticleJson = """
+                {
+                    "id": "%s",
+                    "name": "Updated Article",
+                    "price": 250.0,
+                    "articleItems": []
+                }
+                """.formatted(unknownId);
+
+        mockMvc.perform(put("/api/articles/" + articleId1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updatedArticleJson))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.title").value("Conflict"))
+                .andExpect(jsonPath("$.status").value(409))
+                .andExpect(jsonPath("$.detail").value("Article id in the body does not match the id in the URL"));
+    }
+
+    @Test
+    void deleteArticle_shouldReturnNoContent() throws Exception {
+        mockMvc.perform(delete("/api/articles/" + articleId1)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/api/articles/" + articleId1)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
