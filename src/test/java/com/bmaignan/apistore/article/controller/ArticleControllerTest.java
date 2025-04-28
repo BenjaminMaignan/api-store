@@ -5,26 +5,24 @@ import com.bmaignan.apistore.article.repository.ArticleDao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.http.MediaType;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import java.util.UUID;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.hamcrest.Matchers.hasSize;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-@AutoConfigureTestDatabase(replace = Replace.ANY)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 @ActiveProfiles("test")
 class ArticleControllerTest {
     @Autowired
@@ -57,8 +55,7 @@ class ArticleControllerTest {
 
     @Test
     void getAllArticles_shouldReturnListOfArticles() throws Exception {
-        mockMvc.perform(get("/api/articles")
-                        .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/articles"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].id").value(articleId1.toString()))
@@ -70,8 +67,7 @@ class ArticleControllerTest {
 
     @Test
     void getArticleById_shouldReturnArticle() throws Exception {
-        mockMvc.perform(get("/api/articles/" + articleId1)
-                        .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/articles/{id}", articleId1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Test Article"))
                 .andExpect(jsonPath("$.price").value(100.0));
@@ -79,8 +75,7 @@ class ArticleControllerTest {
 
     @Test
     void getArticleByUnknownId_shouldReturnNotFound() throws Exception {
-        mockMvc.perform(get("/api/articles/" + unknownId)
-                        .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/articles/{id}", unknownId))
                 .andExpect(status().isNotFound());
     }
 
@@ -95,7 +90,7 @@ class ArticleControllerTest {
                 """;
 
         mockMvc.perform(post("/api/articles")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType("application/json")
                         .content(newArticleJson))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -117,7 +112,7 @@ class ArticleControllerTest {
                 """.formatted(articleId1);
 
         mockMvc.perform(put("/api/articles/" + articleId1)
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType("application/json")
                         .content(updatedArticleJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Updated Article"))
@@ -136,7 +131,7 @@ class ArticleControllerTest {
                 """.formatted(unknownId);
 
         mockMvc.perform(put("/api/articles/" + articleId1)
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType("application/json")
                         .content(updatedArticleJson))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.title").value("Conflict"))
@@ -146,12 +141,10 @@ class ArticleControllerTest {
 
     @Test
     void deleteArticle_shouldReturnNoContent() throws Exception {
-        mockMvc.perform(delete("/api/articles/" + articleId1)
-                        .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete("/api/articles/" + articleId1))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/api/articles/" + articleId1)
-                        .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/articles/" + articleId1))
                 .andExpect(status().isNotFound());
     }
 }
