@@ -41,9 +41,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartResponseDto getCart(UUID id) {
-        return cartDao.findById(id)
-                .map(cartMapper::toResponseDto)
-                .orElseThrow(() -> notFound("Cart not found"));
+        return cartMapper.toResponseDto(getEntity(id));
     }
 
     @Override

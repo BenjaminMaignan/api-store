@@ -42,10 +42,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public ArticleResponseDTO getArticle(UUID id) {
-        return
-                articleDao.findById(id)
-                        .map(articleMapper::toResponseDTO)
-                        .orElseThrow(() -> notFound("Article not found"));
+        return articleMapper.toResponseDTO(getEntity(id));
     }
 
     @Override

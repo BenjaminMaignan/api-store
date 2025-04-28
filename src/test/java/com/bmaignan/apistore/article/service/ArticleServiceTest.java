@@ -158,33 +158,33 @@ class ArticleServiceTest {
     @Test
     void createArticle_shouldCreateTheArticle() {
         // Given
-        ArticleItemRequestDTO articleItemRequestDTO = new ArticleItemRequestDTO(
-                null,
-                null,
-                "New Item",
-                "Red",
-                2
-        );
+        var articleItemRequestDTO = ArticleItemRequestDTO.builder()
+                .size("Test Item")
+                .color("Red")
+                .availableStock(2)
+                .build();
 
-        ArticleRequestDTO articleToCreate = new ArticleRequestDTO(
-                null,
-                "New Article",
-                100.0F,
-                List.of(articleItemRequestDTO)
-        );
+
+        var articleRequestDTO = ArticleRequestDTO.builder()
+                .name("Test Article")
+                .price(100.0F)
+                .articleItems(List.of(articleItemRequestDTO))
+                .build();
+
+        var articleResponseDTO = ArticleResponseDTO.builder()
+                .id(articleId)
+                .name("Test Article")
+                .price(100.0F)
+                .articleItems(List.of(new ArticleItemResponseDTO(UUID.randomUUID(), "Test Item", "Red", 2)))
+                .build();
 
         // When
-        when(articleMapper.toEntity(articleToCreate)).thenReturn(article);
+        when(articleMapper.toEntity(articleRequestDTO)).thenReturn(article);
         when(articleDao.save(article)).thenReturn(article);
-        when(articleMapper.toResponseDTO(article)).thenReturn(new ArticleResponseDTO(
-                articleId,
-                "Test Article",
-                100.0F,
-                List.of(new ArticleItemResponseDTO(UUID.randomUUID(), "Test Item", "Red", 2))
-        ));
+        when(articleMapper.toResponseDTO(article)).thenReturn(articleResponseDTO);
 
         // Then
-        ArticleResponseDTO result = articleService.createArticle(articleToCreate);
+        ArticleResponseDTO result = articleService.createArticle(articleRequestDTO);
 
         assertNotNull(result);
         assertEquals(articleId, result.id());
@@ -192,7 +192,7 @@ class ArticleServiceTest {
         assertEquals(100.0F, result.price());
         assertEquals(1, result.articleItems().size());
 
-        verify(articleMapper).toEntity(articleToCreate);
+        verify(articleMapper).toEntity(articleRequestDTO);
         verify(articleDao).save(article);
         verify(articleMapper).toResponseDTO(article);
     }
