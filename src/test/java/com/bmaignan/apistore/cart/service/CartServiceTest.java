@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -98,7 +99,7 @@ class CartServiceTest {
         );
 
         // When
-        when(cartDao.findById(cartId)).thenReturn(java.util.Optional.of(cart));
+        when(cartDao.findById(cartId)).thenReturn(Optional.of(cart));
         when(cartMapper.toResponseDto(cart)).thenReturn(cartResponseDto);
 
         // Then
@@ -115,7 +116,7 @@ class CartServiceTest {
         var unknownId = UUID.randomUUID();
 
         // When
-        when(cartDao.findById(unknownId)).thenReturn(java.util.Optional.empty());
+        when(cartDao.findById(unknownId)).thenReturn(Optional.empty());
 
         // Then
         assertThrows(RuntimeException.class, () -> cartService.getCart(unknownId));

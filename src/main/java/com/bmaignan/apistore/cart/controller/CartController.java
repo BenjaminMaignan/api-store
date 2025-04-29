@@ -3,6 +3,7 @@ package com.bmaignan.apistore.cart.controller;
 import com.bmaignan.apistore.cart.dto.CartRequestDto;
 import com.bmaignan.apistore.cart.dto.CartResponseDto;
 import com.bmaignan.apistore.cart.service.CartService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class CartController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public CartResponseDto createCart(@RequestBody CartRequestDto cart) {
         return cartService.createCart(cart);
     }
@@ -38,6 +40,7 @@ public class CartController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCart(@PathVariable UUID id) {
         cartService.deleteCart(id);
     }

@@ -93,7 +93,7 @@ class ArticleControllerTest {
                         .contentType("application/json")
                         .content(newArticleJson))
                 .andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("New Article"))
                 .andExpect(jsonPath("$.price").value(200.0));
 
@@ -142,7 +142,7 @@ class ArticleControllerTest {
     @Test
     void deleteArticle_shouldReturnNoContent() throws Exception {
         mockMvc.perform(delete("/api/articles/" + articleId1))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         mockMvc.perform(get("/api/articles/" + articleId1))
                 .andExpect(status().isNotFound());
