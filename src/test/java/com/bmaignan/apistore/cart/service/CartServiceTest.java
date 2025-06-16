@@ -71,7 +71,7 @@ class CartServiceTest {
         var cartResponseDto = CartResponseDto.builder()
                 .id(cartId)
                 .cartItems(cart.getCartItems().stream()
-                        .map(c -> new CartItemResponseDto(c.getId(), null, c.getQuantity()))
+                        .map(c -> new CartItemResponseDto(c.getId(), null, c.getQuantity(), null))
                         .toList())
                 .build();
 
@@ -94,7 +94,7 @@ class CartServiceTest {
         var cartResponseDto = new CartResponseDto(
                 cartId,
                 cart.getCartItems().stream()
-                        .map(c -> new CartItemResponseDto(c.getId(), null, c.getQuantity()))
+                        .map(c -> new CartItemResponseDto(c.getId(), null, c.getQuantity(), null))
                         .toList()
         );
 
@@ -130,7 +130,7 @@ class CartServiceTest {
 
         var cartResponseDto = CartResponseDto.builder()
                 .id(cartId)
-                .cartItems(List.of(new CartItemResponseDto(cart.getCartItems().getFirst().getId(), null, 1)))
+                .cartItems(List.of(new CartItemResponseDto(cart.getCartItems().getFirst().getId(), null, 1, null)))
                 .build();
 
         // When
@@ -158,7 +158,7 @@ class CartServiceTest {
 
         var cartResponseDto = CartResponseDto.builder()
                 .id(cartId)
-                .cartItems(List.of(new CartItemResponseDto(cart.getCartItems().getFirst().getId(), null, 1)))
+                .cartItems(List.of(new CartItemResponseDto(cart.getCartItems().getFirst().getId(), null, 1, null)))
                 .build();
 
         // When

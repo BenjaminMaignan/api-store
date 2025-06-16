@@ -1,14 +1,16 @@
 package com.bmaignan.apistore.cartitem.dto;
 
-import com.bmaignan.apistore.articleitem.dto.ArticleItemResponseDTO;
+import com.bmaignan.apistore.articleitem.dto.ArticleCartItemResponseDTO;
 import lombok.Builder;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Builder
 public record CartItemResponseDto(
         UUID id,
-        ArticleItemResponseDTO articleItem,
-        Integer quantity
+        ArticleCartItemResponseDTO articleItem,
+        Integer quantity,
+        Instant createdAt
 ) {
 }

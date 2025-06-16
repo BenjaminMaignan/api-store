@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -20,6 +21,10 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    private Integer quantity;
+
+    private Instant createdAt;
+
     @ManyToOne
     @JoinColumn(name = "cart_id")
     private Cart cart;
@@ -27,6 +32,4 @@ public class CartItem {
     @ManyToOne
     @JoinColumn(name = "article_item_id")
     private ArticleItem articleItem;
-
-    private Integer quantity;
 }
