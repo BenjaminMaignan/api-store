@@ -79,7 +79,7 @@ class ArticleServiceTest {
         when(articleMapper.toLightResponseDTO(article)).thenReturn(articleLightResponseDTO);
 
         // Then
-        List<ArticleLightResponseDTO> result = articleService.findAllArticles();
+        List<ArticleLightResponseDTO> result = articleService.findAllArticles(null);
 
         assertNotNull(result);
         assertEquals(1, result.size());

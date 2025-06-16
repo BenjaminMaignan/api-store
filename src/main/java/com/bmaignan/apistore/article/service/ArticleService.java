@@ -1,5 +1,6 @@
 package com.bmaignan.apistore.article.service;
 
+import com.bmaignan.apistore.article.criteria.ArticleCriteria;
 import com.bmaignan.apistore.article.dto.ArticleLightResponseDTO;
 import com.bmaignan.apistore.article.dto.ArticleRequestDTO;
 import com.bmaignan.apistore.article.dto.ArticleResponseDTO;
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ArticleService {
-    List<ArticleLightResponseDTO> findAllArticles();
+    List<ArticleLightResponseDTO> findAllArticles(ArticleCriteria criteria);
 
     /* Using by mapstruct */
     Article getEntity(UUID id);

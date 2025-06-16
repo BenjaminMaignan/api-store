@@ -1,5 +1,6 @@
 package com.bmaignan.apistore.article.controller;
 
+import com.bmaignan.apistore.article.criteria.ArticleCriteria;
 import com.bmaignan.apistore.article.dto.ArticleLightResponseDTO;
 import com.bmaignan.apistore.article.dto.ArticleRequestDTO;
 import com.bmaignan.apistore.article.dto.ArticleResponseDTO;
@@ -20,8 +21,8 @@ public class ArticleController {
     }
 
     @GetMapping
-    public List<ArticleLightResponseDTO> getArticles() {
-        return articleService.findAllArticles();
+    public List<ArticleLightResponseDTO> getArticles(@ModelAttribute ArticleCriteria criteria) {
+        return articleService.findAllArticles(criteria);
     }
 
     @GetMapping("/{id}")
