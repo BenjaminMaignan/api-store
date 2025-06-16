@@ -1,28 +1,16 @@
 package com.bmaignan.apistore.article.mapper;
 
 import com.bmaignan.apistore.article.dto.ArticleRequestDTO;
+import com.bmaignan.apistore.article.dto.ArticleLightResponseDTO;
 import com.bmaignan.apistore.article.dto.ArticleResponseDTO;
 import com.bmaignan.apistore.article.model.Article;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
 
-@Component
-public class ArticleMapper {
-    private ArticleMapper() {
-    }
+@Mapper(componentModel = "spring")
+public interface ArticleMapper {
+    Article toEntity(ArticleRequestDTO articleDTO);
 
-    public static Article toEntity(ArticleResponseDTO articleDTO) {
-        return new Article(articleDTO.id(), articleDTO.name(), articleDTO.price());
-    }
+    ArticleResponseDTO toResponseDTO(Article article);
 
-    public static Article toEntity(ArticleRequestDTO articleDTO) {
-        return new Article(articleDTO.id(), articleDTO.name(), articleDTO.price());
-    }
-
-    public static ArticleRequestDTO toRequestDTO(Article article) {
-        return new ArticleRequestDTO(article.getId(), article.getName(), article.getPrice());
-    }
-
-    public static ArticleResponseDTO toResponseDTO(Article article) {
-        return new ArticleResponseDTO(article.getId(), article.getName(), article.getPrice());
-    }
+    ArticleLightResponseDTO toLightResponseDTO(Article article);
 }

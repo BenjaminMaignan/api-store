@@ -2,9 +2,11 @@ package com.bmaignan.apistore.customer.model;
 
 import com.bmaignan.apistore.cart.model.Cart;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -14,7 +16,7 @@ import java.util.UUID;
 @Builder
 public class Customer {
     @Id
-    @GeneratedValue(strategy= GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     private String firstname;
@@ -23,6 +25,6 @@ public class Customer {
 
     private String email;
 
-    @OneToMany(mappedBy = "customer")
-    private List<Cart> cart;
+    @OneToOne(mappedBy = "customer")
+    private Cart cart;
 }

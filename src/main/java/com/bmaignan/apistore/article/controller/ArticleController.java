@@ -1,8 +1,10 @@
 package com.bmaignan.apistore.article.controller;
 
+import com.bmaignan.apistore.article.dto.ArticleLightResponseDTO;
 import com.bmaignan.apistore.article.dto.ArticleRequestDTO;
 import com.bmaignan.apistore.article.dto.ArticleResponseDTO;
 import com.bmaignan.apistore.article.service.ArticleService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +20,7 @@ public class ArticleController {
     }
 
     @GetMapping
-    public List<ArticleResponseDTO> getArticles() {
+    public List<ArticleLightResponseDTO> getArticles() {
         return articleService.findAllArticles();
     }
 
@@ -28,6 +30,7 @@ public class ArticleController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ArticleResponseDTO createArticle(@RequestBody ArticleRequestDTO article) {
         return articleService.createArticle(article);
     }
@@ -38,6 +41,7 @@ public class ArticleController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteArticle(@PathVariable UUID id) {
         articleService.deleteArticle(id);
     }

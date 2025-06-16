@@ -1,9 +1,14 @@
 package com.bmaignan.apistore.cart.model;
 
+import com.bmaignan.apistore.cartitem.model.CartItem;
 import com.bmaignan.apistore.customer.model.Customer;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,11 +22,12 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
+    private Instant createdAt;
 
-    @OneToMany
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OrderBy("createdAt ASC")
     private List<CartItem> cartItems;
 
+    @OneToOne
+    private Customer customer;
 }
