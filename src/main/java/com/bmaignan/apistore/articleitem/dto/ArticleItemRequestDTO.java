@@ -10,6 +10,7 @@ public record ArticleItemRequestDTO(
         UUID articleId,
         String size,
         String color,
-        Integer availableStock
+        Integer availableStock,
+        String imageUrl
 ) {
 }

@@ -8,6 +8,7 @@ import java.util.UUID;
 public record ArticleLightResponseDTO(
         UUID id,
         String name,
-        Float price
+        Float price,
+        String imageUrl
 ) {
 }

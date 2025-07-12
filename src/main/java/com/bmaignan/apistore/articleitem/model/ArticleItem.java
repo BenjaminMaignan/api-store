@@ -25,6 +25,8 @@ public class ArticleItem {
 
     private Integer availableStock;
 
+    private String imageUrl;
+
     @OneToOne
     @JoinColumn(name = "article_id")
     private Article article;

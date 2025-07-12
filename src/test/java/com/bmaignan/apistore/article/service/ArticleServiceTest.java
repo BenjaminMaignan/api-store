@@ -16,6 +16,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +67,8 @@ class ArticleServiceTest {
         articleLightResponseDTO = new ArticleLightResponseDTO(
                 articleId,
                 "Test Article",
-                100.0F
+                100.0F,
+                null
         );
     }
 
@@ -73,9 +76,11 @@ class ArticleServiceTest {
     void findAllArticles_shouldReturnAllArticles() {
         // Given
         List<Article> articles = List.of(article);
+        Specification<Article> specification = Specification.where(null);
+        Sort sort = Sort.unsorted();
 
         // When
-        when(articleDao.findAll()).thenReturn(articles);
+        when(articleDao.findAll(specification, sort)).thenReturn(articles);
         when(articleMapper.toLightResponseDTO(article)).thenReturn(articleLightResponseDTO);
 
         // Then
@@ -84,7 +89,7 @@ class ArticleServiceTest {
         assertNotNull(result);
         assertEquals(1, result.size());
         assertSame(articleLightResponseDTO, result.getFirst());
-        verify(articleDao).findAll();
+        verify(articleDao).findAll(specification, sort);
         verify(articleMapper).toLightResponseDTO(article);
     }
 
@@ -120,7 +125,8 @@ class ArticleServiceTest {
                 UUID.randomUUID(),
                 "Test Item",
                 "Red",
-                2
+                2,
+                null
         );
 
         ArticleResponseDTO articleResponseDTO = new ArticleResponseDTO(
@@ -175,7 +181,7 @@ class ArticleServiceTest {
                 .id(articleId)
                 .name("Test Article")
                 .price(100.0F)
-                .articleItems(List.of(new ArticleItemResponseDTO(UUID.randomUUID(), "Test Item", "Red", 2)))
+                .articleItems(List.of(new ArticleItemResponseDTO(UUID.randomUUID(), "Test Item", "Red", 2, null)))
                 .build();
 
         // When
@@ -204,14 +210,14 @@ class ArticleServiceTest {
                 articleId,
                 "Updated Article",
                 150.0F,
-                List.of(new ArticleItemRequestDTO(UUID.randomUUID(), articleId, "Updated Item", "Blue", 3))
+                List.of(new ArticleItemRequestDTO(UUID.randomUUID(), articleId, "Updated Item", "Blue", 3, null))
         );
 
         ArticleResponseDTO articleResponseDTO = new ArticleResponseDTO(
                 articleId,
                 "Updated Article",
                 150.0F,
-                List.of(new ArticleItemResponseDTO(UUID.randomUUID(), "Updated Item", "Blue", 3))
+                List.of(new ArticleItemResponseDTO(UUID.randomUUID(), "Updated Item", "Blue", 3, null))
         );
 
         // When
@@ -240,7 +246,7 @@ class ArticleServiceTest {
                 UUID.randomUUID(),
                 "Updated Article",
                 150.0F,
-                List.of(new ArticleItemRequestDTO(UUID.randomUUID(), articleId, "Updated Item", "Blue", 3))
+                List.of(new ArticleItemRequestDTO(UUID.randomUUID(), articleId, "Updated Item", "Blue", 3, null))
         );
 
         // When

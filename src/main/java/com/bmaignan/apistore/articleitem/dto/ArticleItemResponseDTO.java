@@ -6,6 +6,7 @@ public record ArticleItemResponseDTO(
         UUID id,
         String size,
         String color,
-        Integer availableStock
+        Integer availableStock,
+        String imageUrl
 ) {
 }

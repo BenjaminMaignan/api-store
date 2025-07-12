@@ -9,6 +9,7 @@ public record ArticleCartItemResponseDTO(
         Float price,
         String size,
         String color,
-        Integer availableStock
+        Integer availableStock,
+        String imageUrl
 ) {
 }

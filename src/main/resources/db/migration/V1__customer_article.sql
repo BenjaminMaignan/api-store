@@ -20,5 +20,6 @@ CREATE TABLE article_item
     size       VARCHAR NOT NULL,
     color      VARCHAR NOT NULL,
     available_stock INTEGER NOT NULL DEFAULT 0,
+    image_url VARCHAR,
     FOREIGN KEY (article_id) REFERENCES article (id)
 );

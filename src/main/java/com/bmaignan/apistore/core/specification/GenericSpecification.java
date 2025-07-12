@@ -15,14 +15,14 @@ public class GenericSpecification<T> implements Specification<T> {
     }
 
     @Override
-    public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+    public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
         return switch (criteria.operation()) {
-            case EQUAL -> criteriaBuilder.equal(root.get(criteria.key()), criteria.value());
+            case EQUAL -> cb.equal(root.get(criteria.key()), criteria.value());
             case LIKE ->
-                    criteriaBuilder.like(root.get(criteria.key()), "%" + criteria.value().toString().toLowerCase() + "%");
+                    cb.like(cb.lower(root.get(criteria.key()).as(String.class)), "%" + criteria.value().toString().toLowerCase() + "%");
             case GREATER_THAN ->
-                    criteriaBuilder.greaterThan(root.get(criteria.key()), (Comparable) criteria.value());
-            case LESS_THAN -> criteriaBuilder.lessThan(root.get(criteria.key()), (Comparable) criteria.value());
+                    cb.greaterThan(root.get(criteria.key()), (Comparable) criteria.value());
+            case LESS_THAN -> cb.lessThan(root.get(criteria.key()), (Comparable) criteria.value());
         };
     }
 }
