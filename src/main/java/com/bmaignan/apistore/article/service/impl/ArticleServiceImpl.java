@@ -8,8 +8,7 @@ import com.bmaignan.apistore.article.mapper.ArticleMapper;
 import com.bmaignan.apistore.article.model.Article;
 import com.bmaignan.apistore.article.repository.ArticleDao;
 import com.bmaignan.apistore.article.service.ArticleService;
-import com.bmaignan.apistore.core.specification.Operation;
-import com.bmaignan.apistore.core.specification.SpecificationBuilder;
+import com.bmaignan.apistore.article.specification.ArticleSpecification;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -32,25 +31,21 @@ public class ArticleServiceImpl implements ArticleService {
         this.articleMapper = articleMapper;
     }
 
-    @Override
-    public List<ArticleLightResponseDTO> findAllArticles(ArticleCriteria criteria) {
-        if (criteria == null) {
-            criteria = new ArticleCriteria();
-        }
+    private Sort buildSort(ArticleCriteria criteria) {
+        if (criteria == null) return Sort.unsorted();
 
-        Specification<Article> spec = new SpecificationBuilder<Article>()
-                .with("name", criteria.getName(), Operation.LIKE)
-                .build();
-
-        String sortValue = criteria.getSort();
-
-        sortValue = sortValue == null ? "" : sortValue.toLowerCase();
-
-        Sort sort = switch (sortValue) {
+        return switch (criteria.getSort()) {
             case "price_desc" -> Sort.by(Sort.Direction.DESC, "price");
             case "price_asc" -> Sort.by(Sort.Direction.ASC, "price");
             default -> Sort.unsorted();
         };
+    }
+
+    @Override
+    public List<ArticleLightResponseDTO> findAllArticles(ArticleCriteria criteria) {
+        Specification<Article> spec = ArticleSpecification.build(criteria);
+        Sort sort = buildSort(criteria);
+
 
         return articleDao.findAll(spec, sort).stream()
                 .map(articleMapper::toLightResponseDTO)
